@@ -1,15 +1,34 @@
 import './App.css';
 import React, {Fragment, Component} from 'react';
 import Navbar from './component/layout/Navbar';
+import Users from './component/users/Users';
+import axios from 'axios';
 
 class App extends React.Component{
+  state = {
+    users: [],
+    loading: false
+  }
+
+  async componentDidMount(){
+
+    this.setState({loading:true});
+
+    const res=  await axios.get('https://api.github.com/users');
+
+    this.setState({users: res.data, loading:false});
+  }
+
 
   render() {
 
     return (
-      <nav className="navbar bg-primary">
-        <Navbar title='Github Finder' icon='fab fa-github'/> 
-      </nav>
+      <div className="App">
+        <Navbar title='Github Finder' icon='fab fa-github'/>
+        <div className="container">
+          <Users loading={this.state.loading} users={this.state.users} />
+        </div>
+      </div> 
     );
   }
 }
